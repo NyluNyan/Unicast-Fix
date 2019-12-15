@@ -1,7 +1,7 @@
 {
     "author": "Nylu",
-    "description": "allows changing channels by chat",
+    "description": "fixes Unicast brooch bugs",
     "disableAutoUpdate": false,
-    "name": "Channel Change",
+    "name": "Unicast Fix",
     "servers": ["https://raw.githubusercontent.com/NyluNyan/Unicast-Fix/master/"]
 }
