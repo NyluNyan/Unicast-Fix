@@ -31,7 +31,7 @@ module.exports = function UnicastFix(mod) {
 	function Clear() {
 		var length = users.length,
 		date = Date.now();
-		for(i = 0; i < length; i+=2) {
+		for(var i = 0; i < length; i+=2) {
 			if(date-users[i+1] > 20000) {
 				users.splice(i, 2);
 				length-=2;
