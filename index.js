@@ -1,44 +1,39 @@
 module.exports = function UnicastFix(mod) {
 	
-	const brooches = [999001044, 999001045, 999001035, 999001036, 999001030, 999001029, 999001033, 999001032];
+	const brooches = [999001044, 999001045];
 	
-	let users = [],
+	let users = {},
 	timer = null;
 	
+	mod.command.add('uf', (cmd)=> {
+		mod.log(users);
+    });
+	
 	mod.game.on('leave_loading_screen', () => {
-		if(!timer && users.length) timer = mod.setInterval(Clear, 5000);
+		if(!timer && Object.keys(users).length) timer = mod.setInterval(Clear, 5000);
     });
 	
 	mod.hook('S_ABNORMALITY_BEGIN', 4, (event) => {
-		if(brooches.includes(event.id)) users.push(event.target, Date.now());
+		if(brooches.includes(event.id)) users[event.target] = Date.now();
     });
 	
 	mod.hook('S_SPAWN_USER', 15, (event) => {
-		if(users.length && users.includes(event.gameId)) {
-			var index = users.indexOf(event.gameId)+1;
-			if(Date.now()-20000 > users[index]) users.splice(index-1, 2);
-		}
+		if(users[event.gameId] && Date.now()-20000 > users[event.gameId]) delete users[event.gameId];
     });
 	
 	mod.hook('S_UNICAST_TRANSFORM_DATA', 6, (event) => {
-		if(users.includes(event.gameId)) {
-			var index = users.indexOf(event.gameId)+1;
-			if(Date.now()-1000 > users[index]) users.splice(index-1, 2);
+		if(users[event.gameId]) {
+			if(Date.now()-1000 > users[event.gameId]) delete users[event.gameId];
 			return false;
 		}
 	});
 	
 	function Clear() {
-		var length = users.length,
-		date = Date.now();
-		for(var i = 0; i < length; i+=2) {
-			if(date-users[i+1] > 20000) {
-				users.splice(i, 2);
-				length-=2;
-				i-=2;
-			}
+		var date = Date.now();
+		for(var user in users) {
+			if(date-users[user] > 20000) delete users[user];
 		}
-		if(!length) {
+		if(Object.keys(users).length) {
 			mod.clearInterval(timer);
 			timer = null;
 		}
