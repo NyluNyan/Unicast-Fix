@@ -1,6 +1,6 @@
 module.exports = function UnicastFix(mod) {
 	
-	const brooches = [999001044, 999001045];
+	const brooches = [999001052, 999001044, 999001045];
 	
 	let users = {},
 	timer = null;
